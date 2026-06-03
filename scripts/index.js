@@ -1,3 +1,4 @@
+import { enableValidation, resetValidation } from "./validate.js";
 const initialCards = [
   {
     name: "Vale de Yosemite",
@@ -56,98 +57,129 @@ const cardTemplate = document.querySelector("#card-template");
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
+  document.addEventListener("keydown", handleEscClose);
 }
-
+ 
 function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", handleEscClose);
 }
+ 
 
+function handleOverlayClose(evt) {
+  if (evt.target === evt.currentTarget) {
+    closeModal(evt.currentTarget);
+  }
+}
+ 
 
+function handleEscClose(evt) {
+  if (evt.key === "Escape") {
+    const openedPopup = document.querySelector(".popup_is-opened");
+    if (openedPopup) {
+      closeModal(openedPopup);
+    }
+  }
+}
+ 
+ 
 function fillProfileForm() {
   nameInput.value = profileTitle.textContent;
   descriptionInput.value = profileDescription.textContent;
 }
-
-
+ 
 function handleOpenEditModal() {
   fillProfileForm();
+  resetValidation(formElement, validationConfig);
   openModal(editPopup);
 }
-
-
+ 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = descriptionInput.value;
   closeModal(editPopup);
 }
-
-
-function getCardElement(name = "Lugar sem nome", link = "./images/placeholder.jpg") {
+ 
+ 
+function getCardElement(name, link) {
   const cardElement = cardTemplate.content.cloneNode(true);
   const cardTitle = cardElement.querySelector(".card__title");
   const cardImage = cardElement.querySelector(".card__image");
   const likeButton = cardElement.querySelector(".card__like-button");
   const deleteButton = cardElement.querySelector(".card__delete-button");
-
+ 
   cardTitle.textContent = name;
   cardImage.src = link;
   cardImage.alt = name;
-
+ 
   likeButton.addEventListener("click", function () {
     likeButton.classList.toggle("card__like-button_is-active");
   });
-
- deleteButton.addEventListener("click", function () {
-  deleteButton.closest(".card").remove();
+ 
+  deleteButton.addEventListener("click", function () {
+    deleteButton.closest(".card").remove();
   });
-
+ 
   cardImage.addEventListener("click", function () {
     popupImage.src = link;
     popupImage.alt = name;
     popupCaption.textContent = name;
     openModal(imagePopup);
   });
-
+ 
   return cardElement;
 }
-
-
+ 
 function renderCard(name, link, container) {
   const cardElement = getCardElement(name, link);
   container.prepend(cardElement);
 }
-
-
+ 
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
   renderCard(cardNameInput.value, cardLinkInput.value, cardsContainer);
   closeModal(newCardPopup);
   newCardForm.reset();
 }
-
+ 
 
 editButton.addEventListener("click", handleOpenEditModal);
 editCloseButton.addEventListener("click", function () {
   closeModal(editPopup);
 });
 formElement.addEventListener("submit", handleProfileFormSubmit);
-
-
+ 
+ 
 addButton.addEventListener("click", function () {
+  resetValidation(newCardForm, validationConfig);
   openModal(newCardPopup);
 });
 newCardCloseButton.addEventListener("click", function () {
   closeModal(newCardPopup);
 });
 newCardForm.addEventListener("submit", handleCardFormSubmit);
-
+ 
 
 imagePopupClose.addEventListener("click", function () {
   closeModal(imagePopup);
 });
+ 
 
+document.querySelectorAll(".popup").forEach(function (popup) {
+  popup.addEventListener("click", handleOverlayClose);
+});
+ 
 
-initialCards.forEach((card) => {
+initialCards.forEach(function (card) {
   renderCard(card.name, card.link, cardsContainer);
 });
+ const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error",
+ }
+enableValidation(validationConfig);
