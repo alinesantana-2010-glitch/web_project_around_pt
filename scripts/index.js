@@ -1,4 +1,13 @@
 import { enableValidation, resetValidation } from "./validate.js";
+
+ const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+ }
 const initialCards = [
   {
     name: "Vale de Yosemite",
@@ -174,12 +183,5 @@ document.querySelectorAll(".popup").forEach(function (popup) {
 initialCards.forEach(function (card) {
   renderCard(card.name, card.link, cardsContainer);
 });
- const validationConfig = {
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  inactiveButtonClass: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__error",
- }
+
 enableValidation(validationConfig);
