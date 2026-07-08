@@ -142,5 +142,6 @@ document.querySelectorAll(".popup").forEach(function (popup) {
 });
  
 initialCards.forEach(function (cardData) {
-  renderCard(cardData, cardsContainer);
+  const card = new Card(cardData, cardTemplateSelector, handleImageClick);
+  cardsContainer.append(card.generateCard());
 });
