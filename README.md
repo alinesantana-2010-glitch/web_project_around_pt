@@ -22,8 +22,16 @@ Projeto web interativo onde o usuário pode explorar e compartilhar lugares incr
 - JavaScript ES6+
 
 ## Técnicas e arquitetura
-- **Programação Orientada a Objetos (POO):** lógica de cartões e validação de formulário organizada em classes ES6 (`Card` e `FormValidator`), cada uma responsável por uma única tarefa.
-- **Módulos ES6 (ES Modules):** código dividido em arquivos independentes (`Card.js`, `FormValidator.js`, `utils.js`, `index.js`), importados e exportados via `import`/`export`.
+- **Programação Orientada a Objetos (POO):** toda a lógica da aplicação é organizada em classes ES6, cada uma responsável por uma única tarefa:
+  - `Card` — renderiza e controla cada cartão (curtir, excluir, clique na imagem).
+  - `Section` — renderiza uma lista de itens em um contêiner da página.
+  - `Popup` — classe base que controla abertura/fechamento de pop-ups (clique no ✕, clique no overlay, tecla Esc).
+  - `PopupWithImage` — herda de `Popup`; exibe imagem e legenda em tamanho maior.
+  - `PopupWithForm` — herda de `Popup`; gerencia formulários dentro de pop-ups, coleta os valores dos campos e reseta o formulário ao fechar.
+  - `UserInfo` — controla a leitura e atualização das informações do perfil (nome e descrição).
+  - `FormValidator` — controla a validação em tempo real dos formulários.
+- **Herança:** `PopupWithImage` e `PopupWithForm` estendem a classe `Popup`, reaproveitando a lógica de abrir/fechar e sobrescrevendo apenas o comportamento específico de cada uma.
+- **Módulos ES6 (ES Modules):** código dividido em arquivos independentes — `Card.js`, `Section.js`, `Popup.js`, `PopupWithImage.js`, `PopupWithForm.js`, `UserInfo.js`, `FormValidator.js` e `index.js` — importados e exportados via `import`/`export`. O `index.js` concentra apenas a criação das instâncias das classes e os ouvintes de eventos.
 - **Validação nativa:** uso dos atributos HTML5 (`required`, `minlength`, `maxlength`) combinados com a propriedade `ValidityState` do JavaScript.
 - **Template HTML:** elemento `<template>` para gerar a marcação dos cartões sem duplicar HTML.
 
